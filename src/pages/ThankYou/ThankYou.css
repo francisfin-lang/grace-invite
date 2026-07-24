@@ -65,6 +65,48 @@
   margin: 0;
 }
 
+.thank-you-page__request {
+  position: relative;
+  width: min(100%, 30rem);
+  padding-top: clamp(1.25rem, 4vw, 1.75rem);
+  color: rgba(76, 53, 32, 0.72);
+  text-align: center;
+}
+
+.thank-you-page__request::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(100%, 12rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184, 138, 45, 0.46), transparent);
+  transform: translateX(-50%);
+}
+
+.thank-you-page__request-title {
+  margin: 0;
+  color: #b88a2d;
+  font-size: clamp(0.78rem, 2vw, 0.9rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.thank-you-page__request-message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0.8rem auto 0;
+  font-size: clamp(0.94rem, 2.4vw, 1.05rem);
+  line-height: 1.6;
+}
+
+.thank-you-page__request-message p {
+  margin: 0;
+}
+
 .thank-you-page__date {
   width: min(100%, 24rem);
   padding: clamp(1.1rem, 4vw, 1.5rem);

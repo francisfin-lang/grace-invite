@@ -30,6 +30,16 @@ export default function ThankYou({ invitationPath = '/' }) {
           </div>
         </div>
 
+        <section className="thank-you-page__request" aria-labelledby="thank-you-request-title">
+          <h2 id="thank-you-request-title" className="thank-you-page__request-title">
+            A Small Request
+          </h2>
+          <div className="thank-you-page__request-message">
+            <p>Your presence and blessings are the greatest gift to our child.</p>
+            <p>We kindly request no boxed gifts.</p>
+          </div>
+        </section>
+
         <section className="thank-you-page__date" aria-label="Celebration date">
           <p className="thank-you-page__date-day">Sunday</p>
           <p className="thank-you-page__date-value">16 August 2026</p>
