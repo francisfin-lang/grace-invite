@@ -1,0 +1,31 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-serif: 'Cormorant Garamond', Georgia, Cambria, 'Times New Roman', serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --color-ivory: #fbf6ea;
+  --color-porcelain: #fffdf7;
+  --color-antique-gold: #b99658;
+  --color-deep-gold: #8c6d34;
+  --color-ink: #2f261d;
+  --color-muted-ink: #796a58;
+}
+
+html {
+  background: #efe4cf;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  color: #2f261d;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.82), transparent 34rem),
+    linear-gradient(135deg, #efe1c8 0%, #f8f0df 52%, #e6d3b1 100%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
