@@ -1,0 +1,99 @@
+.guest-counter-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: 100%;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border: 1px solid rgba(198, 158, 87, 0.28);
+  border-radius: 1.5rem;
+  background: #fffaf0;
+  box-shadow: 0 1.25rem 2.5rem rgba(83, 55, 28, 0.08);
+}
+
+.guest-counter-card__copy {
+  min-width: 0;
+}
+
+.guest-counter-card__title {
+  margin: 0;
+  color: #b88a2d;
+  font-family: inherit;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.guest-counter-card__subtitle {
+  margin: 0.45rem 0 0;
+  color: rgba(76, 53, 32, 0.72);
+  font-size: clamp(0.95rem, 2.4vw, 1.05rem);
+  line-height: 1.5;
+}
+
+.guest-counter-card__controls {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(3rem, auto) 3.25rem;
+  align-items: center;
+  gap: 0.85rem;
+  flex-shrink: 0;
+}
+
+.guest-counter-card__button {
+  display: inline-grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border: 1px solid rgba(184, 138, 45, 0.5);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #d9b761 0%, #b88a2d 100%);
+  color: #fffaf0;
+  cursor: pointer;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+.guest-counter-card__button:hover {
+  box-shadow: 0 0.75rem 1.5rem rgba(184, 138, 45, 0.25);
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+
+.guest-counter-card__button:focus-visible {
+  outline: 3px solid rgba(184, 138, 45, 0.35);
+  outline-offset: 3px;
+}
+
+.guest-counter-card__button:active {
+  transform: translateY(0);
+}
+
+.guest-counter-card__value {
+  min-width: 3rem;
+  color: #4c3520;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .guest-counter-card {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 1.25rem;
+    text-align: center;
+  }
+
+  .guest-counter-card__controls {
+    grid-template-columns: 3.5rem minmax(3rem, 1fr) 3.5rem;
+    width: 100%;
+  }
+
+  .guest-counter-card__button {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+}
