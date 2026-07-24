@@ -32,10 +32,10 @@ export default function ThankYou({ invitationPath = '/' }) {
 
         <section className="thank-you-page__request" aria-labelledby="thank-you-request-title">
           <h2 id="thank-you-request-title" className="thank-you-page__request-title">
-            A Small Request
+            WITH GRATITUDE
           </h2>
           <div className="thank-you-page__request-message">
-            <p>Your presence and blessings are the greatest gift to our child.</p>
+            <p>Your presence, prayers, and blessings are the greatest gift to our child.</p>
             <p>We kindly request no boxed gifts.</p>
           </div>
         </section>

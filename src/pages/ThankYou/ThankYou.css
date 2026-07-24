@@ -70,6 +70,7 @@
   width: min(100%, 30rem);
   padding-top: clamp(1.25rem, 4vw, 1.75rem);
   color: rgba(76, 53, 32, 0.72);
+  font-family: Georgia, 'Times New Roman', serif;
   text-align: center;
 }
 
@@ -87,7 +88,7 @@
 .thank-you-page__request-title {
   margin: 0;
   color: #b88a2d;
-  font-size: clamp(0.78rem, 2vw, 0.9rem);
+  font-size: clamp(0.8rem, 2vw, 0.92rem);
   font-weight: 700;
   letter-spacing: 0.18em;
   line-height: 1.4;
@@ -99,7 +100,7 @@
   flex-direction: column;
   gap: 0.55rem;
   margin: 0.8rem auto 0;
-  font-size: clamp(0.94rem, 2.4vw, 1.05rem);
+  font-size: clamp(0.9rem, 2.3vw, 1rem);
   line-height: 1.6;
 }
 
