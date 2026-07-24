@@ -1,8 +1,11 @@
+import { useNavigate } from 'react-router-dom';
 import './ThankYou.css';
 
 export default function ThankYou({ invitationPath = '/' }) {
+  const navigate = useNavigate();
+
   const handleReturn = () => {
-    window.location.assign(invitationPath);
+    navigate(invitationPath);
   };
 
   return (
@@ -37,7 +40,7 @@ export default function ThankYou({ invitationPath = '/' }) {
           type="button"
           onClick={handleReturn}
         >
-          Return to Invitation
+          Close Invitation
         </button>
       </section>
     </main>

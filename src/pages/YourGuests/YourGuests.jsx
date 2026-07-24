@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import GuestCounterCard from '../../components/GuestCounterCard';
 import InvitationInfoCard from '../../components/InvitationInfoCard';
 import './YourGuests.css';
@@ -6,6 +7,7 @@ import './YourGuests.css';
 const INVITED_GUESTS = 4;
 
 export default function YourGuests({ onConfirm, thankYouPath = '/thank-you' }) {
+  const navigate = useNavigate();
   const [adults, setAdults] = useState(0);
   const [children, setChildren] = useState(0);
 
@@ -41,7 +43,7 @@ export default function YourGuests({ onConfirm, thankYouPath = '/thank-you' }) {
       return;
     }
 
-    window.location.assign(thankYouPath);
+    navigate(thankYouPath);
   };
 
   return (
