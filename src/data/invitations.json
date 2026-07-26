@@ -1,0 +1,14 @@
+[
+  {
+    "inviteId": "BAP2026-0001",
+    "inviteeName": "Francis Fernandes",
+    "phone": "9876543210",
+    "guestsAllowed": 4
+  },
+  {
+    "inviteId": "BAP2026-0002",
+    "inviteeName": "John D'Souza",
+    "phone": "9876543211",
+    "guestsAllowed": 2
+  }
+]

@@ -1,0 +1,132 @@
+.ornament-cross {
+  width: clamp(96px, 20vw, 148px);
+  height: auto;
+  display: block;
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 10px 18px rgba(138, 100, 35, 0.22));
+  animation: ornament-rise 900ms ease-out both;
+}
+
+.ornament-corner {
+  color: var(--grace-gold-dark);
+  height: 30px;
+  opacity: 0.7;
+  position: absolute;
+  width: 30px;
+}
+
+.ornament-corner--tl {
+  left: 14px;
+  top: 14px;
+}
+
+.ornament-corner--tr {
+  right: 14px;
+  top: 14px;
+  transform: scaleX(-1);
+}
+
+.ornament-corner--bl {
+  bottom: 14px;
+  left: 14px;
+  transform: scaleY(-1);
+}
+
+.ornament-corner--br {
+  bottom: 14px;
+  right: 14px;
+  transform: scale(-1, -1);
+}
+
+@keyframes ornament-rise {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ornament-cross {
+    animation: none;
+  }
+}
+
+.ornament-divider {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  margin: 22px auto;
+  max-width: 200px;
+}
+
+.ornament-divider__line {
+  background: var(--grace-gold-dark);
+  flex: 1;
+  height: 1px;
+  opacity: 0.85;
+}
+
+.ornament-divider__dot {
+  background: var(--grace-gold-dark);
+  border-radius: 50%;
+  flex-shrink: 0;
+  height: 4px;
+  width: 4px;
+}
+
+.ornament-divider__mark {
+  background: var(--grace-gold);
+  border: 1px solid var(--grace-gold-dark);
+  border-radius: 2px;
+  flex-shrink: 0;
+  height: 9px;
+  transform: rotate(45deg);
+  width: 9px;
+}
+
+.ornament-heart {
+  color: var(--grace-gold);
+  height: 18px;
+  width: 18px;
+}
+
+.ornament-icon {
+  height: 18px;
+  vertical-align: -3px;
+  width: 18px;
+}
+
+.icon-badge {
+  align-items: center;
+  background: var(--grace-ivory);
+  border: 1px solid rgba(177, 138, 58, 0.4);
+  border-radius: 999px;
+  color: var(--grace-gold-dark);
+  display: inline-flex;
+  flex-shrink: 0;
+  justify-content: center;
+}
+
+.icon-badge--md {
+  height: 44px;
+  width: 44px;
+}
+
+.icon-badge--md svg {
+  height: 22px;
+  width: 22px;
+}
+
+.icon-badge--sm {
+  height: 34px;
+  width: 34px;
+}
+
+.icon-badge--sm svg {
+  height: 17px;
+  width: 17px;
+}
