@@ -1,0 +1,10 @@
+.attendance-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 36px;
+}
+
+.attendance-actions .shell-button {
+  width: 100%;
+}

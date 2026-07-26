@@ -5,6 +5,7 @@ import { getInviteIdFromUrl } from "./utils/url";
 
 import Cover from './pages/Cover';
 import Invitation from './pages/Invitation';
+import WillYouAttend from "./pages/WillYouAttend";
 import YourGuests from './pages/YourGuests';
 import ThankYou from './pages/ThankYou';
 
@@ -19,6 +20,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        <Route
+  path="/will-you-attend"
+  element={<WillYouAttend />}
+/>
 
         <Route
           path="/"

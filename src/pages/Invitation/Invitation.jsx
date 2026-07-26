@@ -153,9 +153,9 @@ export default function Invitation() {
             View Reception
           </a>
 
-          <Link className="shell-button shell-button--full" to="/guests">
+          <Link className="shell-button shell-button--full" to="/will-you-attend">
             <Icon icon="user" />
-            Confirm Attendance
+            RSVP Now
           </Link>
         </div>
 

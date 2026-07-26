@@ -1,15 +1,15 @@
-import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import GuestCounterCard from '../../components/GuestCounterCard';
-import InvitationInfoCard from '../../components/InvitationInfoCard';
-import { CrossEmblem, PanelCorners } from '../../components/Ornaments';
-import { submitRsvp } from '../../services/rsvpService';
-import './YourGuests.css';
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import GuestCounterCard from "../../components/GuestCounterCard";
+import InvitationInfoCard from "../../components/InvitationInfoCard";
+import { CrossEmblem, PanelCorners } from "../../components/Ornaments";
+import { submitRsvp } from "../../services/rsvpService";
+import "./YourGuests.css";
 
 export default function YourGuests({
   invitation,
   onConfirm,
-  thankYouPath = '/thank-you'
+  thankYouPath = "/thank-you",
 }) {
   const navigate = useNavigate();
 
@@ -24,42 +24,50 @@ export default function YourGuests({
     guestsConfirmed > 0 &&
     guestsConfirmed <= INVITED_GUESTS;
 
-  const counterActions = useMemo(() => ({
-    incrementAdults: () => {
-      setAdults((currentAdults) =>
-        currentAdults + children < INVITED_GUESTS
-          ? currentAdults + 1
-          : currentAdults
-      );
-    },
+  const counterActions = useMemo(
+    () => ({
+      incrementAdults: () => {
+        setAdults((currentAdults) =>
+          currentAdults + children < INVITED_GUESTS
+            ? currentAdults + 1
+            : currentAdults
+        );
+      },
 
-    decrementAdults: () => {
-      setAdults((currentAdults) =>
-        Math.max(0, currentAdults - 1)
-      );
-    },
+      decrementAdults: () => {
+        setAdults((currentAdults) =>
+          Math.max(0, currentAdults - 1)
+        );
+      },
 
-    incrementChildren: () => {
-      setChildren((currentChildren) =>
-        adults + currentChildren < INVITED_GUESTS
-          ? currentChildren + 1
-          : currentChildren
-      );
-    },
+      incrementChildren: () => {
+        setChildren((currentChildren) =>
+          adults + currentChildren < INVITED_GUESTS
+            ? currentChildren + 1
+            : currentChildren
+        );
+      },
 
-    decrementChildren: () => {
-      setChildren((currentChildren) =>
-        Math.max(0, currentChildren - 1)
-      );
-    },
-  }), [adults, children, INVITED_GUESTS]);
+      decrementChildren: () => {
+        setChildren((currentChildren) =>
+          Math.max(0, currentChildren - 1)
+        );
+      },
+    }),
+    [adults, children, INVITED_GUESTS]
+  );
 
   const handleConfirm = () => {
     if (!canConfirm) {
       return;
     }
 
-    const rsvp = { adults, children, total: guestsConfirmed };
+    const rsvp = {
+      attending: true,
+      adults,
+      children,
+      total: guestsConfirmed,
+    };
 
     submitRsvp(invitation?.inviteId, rsvp);
 
@@ -68,7 +76,9 @@ export default function YourGuests({
       return;
     }
 
-    navigate(thankYouPath, { state: rsvp });
+    navigate(thankYouPath, {
+      state: rsvp,
+    });
   };
 
   return (
@@ -78,6 +88,7 @@ export default function YourGuests({
         aria-labelledby="your-guests-title"
       >
         <PanelCorners />
+
         <CrossEmblem className="shell-cross" />
 
         <div className="your-guests-page__intro">
@@ -96,13 +107,13 @@ export default function YourGuests({
             <p>Thank you for accepting our invitation.</p>
 
             <p>
-              We are delighted that you will be joining us in
-              celebrating this special day.
+              We are delighted that you will be joining us in celebrating this
+              special day.
             </p>
 
             <p>
-              Please let us know how many guests from your
-              invitation will be attending the reception.
+              Please let us know how many guests from your invitation will be
+              attending the reception.
             </p>
           </div>
         </div>
@@ -139,7 +150,7 @@ export default function YourGuests({
           aria-live="polite"
         >
           <p className="your-guests-page__summary-label">
-            Guests Attending
+            Confirmed
           </p>
 
           <p className="your-guests-page__summary-value">
@@ -157,7 +168,7 @@ export default function YourGuests({
           onClick={handleConfirm}
           disabled={!canConfirm}
         >
-          Confirm Attendance
+          Confirm RSVP
         </button>
       </section>
     </main>
