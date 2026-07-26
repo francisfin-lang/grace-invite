@@ -15,8 +15,8 @@ export default function ThankYou({ invitation, invitationPath = "/" }) {
   const location = useLocation();
 
   const handleReturn = () => {
-    navigate(invitationPath);
-  };
+  window.close();
+};
 
   // Read RSVP from navigation state.
   // If the page is refreshed, fall back to the locally saved RSVP.
@@ -121,7 +121,7 @@ export default function ThankYou({ invitation, invitationPath = "/" }) {
           type="button"
           onClick={handleReturn}
         >
-          Close Invitation
+          Done
         </button>
 
         <HeartMark className="invitation-heart invitation-heart--footer" />

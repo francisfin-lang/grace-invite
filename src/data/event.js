@@ -12,9 +12,9 @@ const event = {
   },
 
   celebration: {
-    intro: "With praise and thanksgiving to Almighty God,",
+    intro: "With Grateful Hearts",
     request:
-      "request the pleasure of your company as we celebrate the Holy Baptism of our beloved son.",
+      "Request the pleasure of your company as we celebrate the Holy Baptism of our Beloved Son.",
   },
 
   baptism: {

@@ -9,7 +9,7 @@ export default function Cover() {
         <CrossEmblem className="shell-cross" />
         <h1 id="cover-title" className="shell-title">WELCOME</h1>
         <Divider />
-        <p className="shell-subtitle">You are invited to celebrate the Holy Baptism</p>
+        <p className="shell-subtitle">You are invited to celebrate the Holy Baptism of our Son</p>
         <Link className="shell-button" to="/invitation">View Invitation</Link>
       </section>
     </main>

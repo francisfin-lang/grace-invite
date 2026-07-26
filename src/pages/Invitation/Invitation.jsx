@@ -22,22 +22,7 @@ export default function Invitation() {
         </figure>
 
         <Divider />
-
-        <div className="invitation-heading">
-          <p className="invitation-heading__small">
-            YOU ARE INVITED TO THE
-          </p>
-          <p className="invitation-heading__small">
-            HOLY BAPTISM OF OUR
-          </p>
-
-          <h1 id="invitation-title">
-            {event.childName}
-          </h1>
-        </div>
-
-        <Divider />
-
+        
         <div className="invitation-parents">
           <p className="invitation-parents__intro">
             {event.celebration.intro}
@@ -160,14 +145,6 @@ export default function Invitation() {
         </div>
 
         <Divider />
-
-        <div className="invitation-gratitude">
-          <p className="invitation-gratitude__heading">
-            {event.gratitude.heading}
-          </p>
-          <p>{event.gratitude.message1}</p>
-          <p>{event.gratitude.message2}</p>
-        </div>
 
         <p className="invitation-closing">
           {event.closing}
