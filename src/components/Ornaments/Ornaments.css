@@ -2,7 +2,6 @@
   width: clamp(96px, 20vw, 148px);
   height: auto;
   display: block;
-  mix-blend-mode: multiply;
   filter: drop-shadow(0 10px 18px rgba(138, 100, 35, 0.22));
   animation: ornament-rise 900ms ease-out both;
 }
