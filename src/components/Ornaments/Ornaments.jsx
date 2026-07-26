@@ -7,7 +7,7 @@ import './Ornaments.css';
 export function CrossEmblem({ className = '' }) {
   return (
     <img
-      src="/cross-emblem.png"
+      src={`${import.meta.env.BASE_URL}cross-emblem.png`}
       alt=""
       className={`ornament-cross ${className}`.trim()}
     />
