@@ -27,7 +27,7 @@ export default function WillYouAttend() {
           Reception RSVP
         </p>
 
-        <h1 className="shell-title">
+        <h1 className="shell-title shell-title--compact">
           Will You Be Joining Us
           <br />
           for the Reception?
@@ -36,20 +36,20 @@ export default function WillYouAttend() {
         <p className="shell-subtitle">
           We would be delighted to celebrate this special day with you.
           <br /><br />
-          Kindly let us know if you will be joining us for the reception.
+          Please let us know if you will be joining us for the reception.
         </p>
 
         <div className="attendance-actions">
 
           <button
-            className="shell-button"
-            onClick={handleYes}
+           className="shell-button shell-button--titlecase"
+           onClick={handleYes}
           >
             Yes, We Will Attend
           </button>
 
           <button
-            className="shell-button shell-button--secondary"
+            className="shell-button shell-button--secondary shell-button--titlecase"
             onClick={handleNo}
           >
             Regretfully, We Are Unable To Attend

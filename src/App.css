@@ -129,6 +129,11 @@ a {
   margin: 0;
 }
 
+.shell-title--compact {
+  font-size: clamp(34px, 8vw, 64px);
+  line-height: 1.06;
+}
+
 .shell-subtitle {
   font-size: clamp(14px, 3vw, 18px);
   line-height: 1.8;
@@ -153,6 +158,10 @@ a {
   text-decoration: none;
   text-transform: uppercase;
   box-shadow: 0 12px 28px rgba(125, 93, 30, 0.22);
+}
+
+.shell-button--titlecase {
+  text-transform: none;
 }
 
 .shell-button--full {

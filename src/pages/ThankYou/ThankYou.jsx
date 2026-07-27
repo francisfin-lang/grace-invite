@@ -15,8 +15,15 @@ export default function ThankYou({ invitation, invitationPath = "/" }) {
   const location = useLocation();
 
   const handleReturn = () => {
-  window.close();
-};
+    // Attempt to close the browser tab/window (works only if opened by JavaScript)
+    if (window.opener) {
+      window.close();
+      return;
+    }
+
+    // Fallback for normal browser tabs
+    navigate("/", { replace: true });
+  };
 
   // Read RSVP from navigation state.
   // If the page is refreshed, fall back to the locally saved RSVP.
@@ -121,7 +128,7 @@ export default function ThankYou({ invitation, invitationPath = "/" }) {
           type="button"
           onClick={handleReturn}
         >
-          Done
+          Finish
         </button>
 
         <HeartMark className="invitation-heart invitation-heart--footer" />
