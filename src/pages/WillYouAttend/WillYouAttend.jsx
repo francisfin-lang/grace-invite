@@ -60,4 +60,6 @@ export default function WillYouAttend() {
       </section>
     </main>
   );
+  
 }
+
