@@ -57,7 +57,7 @@ export default function YourGuests({
     [adults, children, INVITED_GUESTS]
   );
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!canConfirm) {
       return;
     }
@@ -69,7 +69,7 @@ export default function YourGuests({
       total: guestsConfirmed,
     };
 
-    submitRsvp(invitation?.inviteId, rsvp);
+    await submitRsvp(invitation?.inviteId, rsvp);
 
     if (onConfirm) {
       onConfirm(rsvp);

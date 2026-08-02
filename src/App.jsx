@@ -23,7 +23,7 @@ function App() {
 
         <Route
   path="/will-you-attend"
-  element={<WillYouAttend />}
+  element={<WillYouAttend invitation={invitation} />}
 />
 
         <Route

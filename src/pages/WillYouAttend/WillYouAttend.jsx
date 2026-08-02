@@ -1,21 +1,26 @@
 import "./WillYouAttend.css";
 import { useNavigate } from "react-router-dom";
+import { submitRsvp } from "../../services/rsvpService";
 
-export default function WillYouAttend() {
+export default function WillYouAttend({ invitation }) {
   const navigate = useNavigate();
 
   const handleYes = () => {
     navigate("/guests");
   };
 
-  const handleNo = () => {
+  const handleNo = async () => {
+    const rsvp = {
+      attending: false,
+      adults: 0,
+      children: 0,
+      total: 0,
+    };
+
+    await submitRsvp(invitation?.inviteId, rsvp);
+
     navigate("/thank-you", {
-      state: {
-        attending: false,
-        adults: 0,
-        children: 0,
-        total: 0,
-      },
+      state: rsvp,
     });
   };
 
@@ -42,8 +47,8 @@ export default function WillYouAttend() {
         <div className="attendance-actions">
 
           <button
-           className="shell-button shell-button--titlecase"
-           onClick={handleYes}
+            className="shell-button shell-button--titlecase"
+            onClick={handleYes}
           >
             Yes, We Will Attend
           </button>
@@ -52,7 +57,7 @@ export default function WillYouAttend() {
             className="shell-button shell-button--secondary shell-button--titlecase"
             onClick={handleNo}
           >
-            Regretfully, We Are Unable To Attend
+            Regretfully, We Are Unable to Attend
           </button>
 
         </div>
@@ -60,6 +65,4 @@ export default function WillYouAttend() {
       </section>
     </main>
   );
-  
 }
-
