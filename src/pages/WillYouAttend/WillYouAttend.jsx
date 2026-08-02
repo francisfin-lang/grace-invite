@@ -1,12 +1,13 @@
 import "./WillYouAttend.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { submitRsvp } from "../../services/rsvpService";
 
 export default function WillYouAttend({ invitation }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleYes = () => {
-    navigate("/guests");
+    navigate({ pathname: "/guests", search: location.search });
   };
 
   const handleNo = async () => {
@@ -19,7 +20,7 @@ export default function WillYouAttend({ invitation }) {
 
     await submitRsvp(invitation?.inviteId, rsvp);
 
-    navigate("/thank-you", {
+    navigate({ pathname: "/thank-you", search: location.search }, {
       state: rsvp,
     });
   };

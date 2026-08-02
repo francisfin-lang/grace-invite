@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import GuestCounterCard from "../../components/GuestCounterCard";
 import InvitationInfoCard from "../../components/InvitationInfoCard";
 import { CrossEmblem, PanelCorners } from "../../components/Ornaments";
@@ -12,8 +12,19 @@ export default function YourGuests({
   thankYouPath = "/thank-you",
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const INVITED_GUESTS = invitation?.guestsAllowed ?? 0;
+  useEffect(() => {
+    console.log("========== YOUR GUESTS ==========");
+    console.log("Invitation object:", invitation);
+    console.log("Invite ID:", invitation?.inviteId);
+    console.log("Invitee:", invitation?.inviteeName);
+    console.log("Guests Allowed:", invitation?.guestsAllowed);
+    console.log("Current URL:", window.location.href);
+    console.log("Search:", location.search);
+  }, [invitation, location]);
+
+  const INVITED_GUESTS = Number(invitation?.guestsAllowed ?? 0);
 
   const [adults, setAdults] = useState(0);
   const [children, setChildren] = useState(0);
@@ -62,23 +73,34 @@ export default function YourGuests({
       return;
     }
 
-    const rsvp = {
-      attending: true,
-      adults,
-      children,
-      total: guestsConfirmed,
-    };
+    try {
+      const rsvp = {
+        attending: true,
+        adults,
+        children,
+        total: guestsConfirmed,
+      };
 
-    await submitRsvp(invitation?.inviteId, rsvp);
+      await submitRsvp(invitation?.inviteId, rsvp);
 
-    if (onConfirm) {
-      onConfirm(rsvp);
-      return;
+      if (onConfirm) {
+        onConfirm(rsvp);
+        return;
+      }
+
+      navigate(
+        {
+          pathname: thankYouPath,
+          search: location.search,
+        },
+        {
+          state: rsvp,
+        }
+      );
+    } catch (error) {
+      console.error("RSVP submission failed:", error);
+      alert(error.message || "Unable to submit RSVP.");
     }
-
-    navigate(thankYouPath, {
-      state: rsvp,
-    });
   };
 
   return (
@@ -121,7 +143,7 @@ export default function YourGuests({
         <InvitationInfoCard
           title="YOUR INVITATION INCLUDES"
           value={`${INVITED_GUESTS} Guests`}
-          subtitle={invitation?.inviteeName}
+          subtitle={invitation?.inviteeName ?? ""}
         />
 
         <div

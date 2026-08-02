@@ -1,8 +1,10 @@
 import event from "../../data/event";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { CrossEmblem, Divider, HeartMark, IconBadge, Icon, PanelCorners } from "../../components/Ornaments";
 
 export default function Invitation() {
+  const location = useLocation();
+
   return (
     <main className="shell-page invitation-page">
       <section
@@ -138,7 +140,10 @@ export default function Invitation() {
             View Reception
           </a>
 
-          <Link className="shell-button shell-button--full" to="/will-you-attend">
+          <Link
+            className="shell-button shell-button--full"
+            to={{ pathname: "/will-you-attend", search: location.search }}
+          >
             <Icon icon="user" />
             RSVP Now
           </Link>

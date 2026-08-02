@@ -1,19 +1,34 @@
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbzBaxpcjl_0FLxi31enpE49mIT_5eE6BZkI10nrGo54lVl_QZNLngFiHbu97MGKFWVX/exec";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
 export async function getInvitation(inviteId) {
-  const response = await fetch(`${API_URL}?id=${inviteId}`);
+  const response = await fetch(
+    `${API_URL}/api/invitation/${encodeURIComponent(inviteId)}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Invitation not found");
+  }
+
   return await response.json();
 }
 
-export async function submitRsvp(rsvp) {
-  const response = await fetch(API_URL, {
+export async function submitRsvp(inviteId, rsvp) {
+  const response = await fetch(`${API_URL}/api/rsvp`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(rsvp),
+    body: JSON.stringify({
+      inviteId,
+      ...rsvp,
+    }),
   });
 
-  return await response.json();
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Unable to submit RSVP");
+  }
+
+  return data;
 }
