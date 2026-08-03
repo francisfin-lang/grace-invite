@@ -1,6 +1,8 @@
 const STORAGE_KEY_PREFIX = "grace-invite:rsvp:";
+
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:3001";
+  import.meta.env.VITE_API_URL ||
+  "https://graceinvite-github-io.onrender.com";
 
 function storageKey(inviteId) {
   return `${STORAGE_KEY_PREFIX}${inviteId}`;
