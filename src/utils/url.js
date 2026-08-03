@@ -1,4 +1,4 @@
 export function getInviteIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("id");
+  return params.get("invite");
 }

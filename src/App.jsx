@@ -17,7 +17,7 @@ import "./App.css";
 
 function App() {
   const inviteId = getInviteIdFromUrl();
-
+  console.log("Invite ID =", inviteId);
   const [invitation, setInvitation] = useState(null);
   const [loading, setLoading] = useState(true);
 
