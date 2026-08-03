@@ -25,7 +25,7 @@ a {
     linear-gradient(145deg, #fffdf7 0%, var(--grace-ivory) 46%, var(--grace-ivory-deep) 100%);
   display: grid;
   place-items: center;
-  padding: 32px 18px;
+  padding: clamp(20px, 3vw, 32px) clamp(14px, 3vw, 24px);
   position: relative;
   overflow: hidden;
 }
@@ -61,11 +61,11 @@ a {
     0 28px 80px rgba(91, 67, 23, 0.2),
     0 0 0 1px rgba(255, 255, 255, 0.5) inset,
     0 0 46px rgba(226, 190, 112, 0.16) inset;
-  padding: clamp(32px, 7vw, 72px) clamp(22px, 6vw, 58px);
+  padding: clamp(28px, 6vw, 64px) clamp(20px, 5vw, 48px);
   position: relative;
   text-align: center;
   z-index: 1;
-  animation: panel-rise 700ms ease-out both;
+  animation: panel-fade 700ms ease-out both;
 }
 
 .shell-panel::before {
@@ -86,14 +86,12 @@ a {
   pointer-events: none;
 }
 
-@keyframes panel-rise {
+@keyframes panel-fade {
   from {
     opacity: 0;
-    transform: translateY(14px);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
 
@@ -105,9 +103,10 @@ a {
 
 .shell-cross {
   display: block;
-  margin: 0 auto 20px;
+  margin: 0 auto 24px;
   position: relative;
   z-index: 1;
+  transform: scale(1.15);
 }
 
 .shell-kicker,
@@ -122,7 +121,7 @@ a {
 .shell-title {
   color: var(--grace-gold-dark);
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(42px, 10vw, 82px);
+  font-size: clamp(38px, 8.6vw, 70px);
   font-weight: 400;
   letter-spacing: 0.14em;
   line-height: 0.98;
@@ -137,8 +136,8 @@ a {
 .shell-subtitle {
   font-size: clamp(14px, 3vw, 18px);
   line-height: 1.8;
-  margin: 24px auto 34px;
-  max-width: 420px;
+  margin: 18px auto 32px;
+  max-width: 440px;
 }
 
 .shell-button {
@@ -158,6 +157,12 @@ a {
   text-decoration: none;
   text-transform: uppercase;
   box-shadow: 0 12px 28px rgba(125, 93, 30, 0.22);
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+.shell-button:hover {
+  filter: brightness(1.03);
+  transform: translateY(-1px);
 }
 
 .shell-button--titlecase {
@@ -174,9 +179,9 @@ a {
 
 .shell-scripture {
   border-block: 1px solid rgba(177, 138, 58, 0.25);
-  margin: 8px auto 30px;
+  margin: 6px auto 24px;
   max-width: 620px;
-  padding: 20px 0;
+  padding: 16px 0 18px;
 }
 
 .shell-scripture blockquote {
@@ -222,14 +227,24 @@ a {
 }
 
 .invitation-parents {
-  margin: 0 auto 8px;
-  max-width: 480px;
+  margin: 0 auto 4px;
+  max-width: 500px;
 }
 
 .invitation-parents__intro {
-  color: var(--grace-ink);
-  font-size: clamp(14px, 3vw, 16px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   margin: 0 0 14px;
+  color: var(--grace-gold-dark);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(18px, 3.8vw, 24px);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .invitation-parents__names {
@@ -238,9 +253,9 @@ a {
   display: flex;
   flex-direction: column;
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(22px, 5vw, 30px);
+  font-size: clamp(24px, 5.4vw, 32px);
   gap: 6px;
-  margin: 0 0 16px;
+  margin: 0 0 14px;
 }
 
 .invitation-parents__and {
@@ -265,22 +280,22 @@ a {
   color: var(--grace-muted);
   font-size: clamp(13px, 2.6vw, 15px);
   line-height: 1.7;
-  margin: 0;
+  margin: 0 0 4px;
 }
 
 .invitation-heart {
   color: var(--grace-gold);
   display: block;
   height: 20px;
-  margin: 4px auto 24px;
+  margin: 0 auto 18px;
   width: 20px;
 }
 
 .invitation-details {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin: 0 0 28px;
+  gap: 12px;
+  margin: 0 0 22px;
   text-align: left;
 }
 
@@ -288,7 +303,7 @@ a {
   background: rgba(255, 253, 247, 0.78);
   border: 1px solid rgba(177, 138, 58, 0.28);
   border-radius: 22px;
-  padding: 22px;
+  padding: 18px 20px;
 }
 
 .detail-card__row {
@@ -387,6 +402,7 @@ a {
   flex-wrap: wrap;
   gap: 12px;
   justify-content: center;
+  margin-top: 6px;
 }
 
 .invitation-actions .shell-button:not(.shell-button--full) {
@@ -402,6 +418,22 @@ a {
   .shell-button {
     width: 100%;
   }
+
+  .shell-panel {
+    padding: 24px 18px;
+  }
+
+  .cover-title {
+    margin-bottom: 24px;
+  }
+
+  .invitation-actions {
+    flex-direction: column;
+  }
+
+  .invitation-actions .shell-button:not(.shell-button--full) {
+    width: 100%;
+  }
 }
 
 .cover-title {
@@ -409,12 +441,12 @@ a {
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  margin:12px 0 46px;
+  margin:10px 0 32px;
   color:var(--grace-gold-dark);
   font-family:Georgia,"Times New Roman",serif;
-  font-size:clamp(30px,6vw,48px);
+  font-size:clamp(28px,5.2vw,42px);
   font-weight:400;
-  letter-spacing:.12em;
+  letter-spacing:.16em;
   line-height:.95;
   text-align:center;
   text-transform:uppercase;
@@ -425,25 +457,10 @@ a {
 }
 
 .cover-title span:last-child{
-  margin-top:6px;
+  margin-top:8px;
 }
 
 /* Invitation Intro */
-
-.invitation-parents__intro {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-
-  margin: 0 0 18px;
-
-  color: var(--grace-muted);
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  line-height: 1.6;
-}
 
 .invitation-parents__intro span {
   display: block;

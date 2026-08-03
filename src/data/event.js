@@ -28,7 +28,7 @@ const event = {
   reception: {
     time: "12:00 PM",
     venue: "Emerald Hall",
-    address: "Dr. Antonio Da'Silva High School",
+    address: "Dr. Antonio Da'Silva High School, Dadar (W)",
     note: "Immediately following the Baptism Ceremony",
   },
 

@@ -1,10 +1,16 @@
 .attendance-actions {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 36px;
+  gap: 12px;
+  margin-top: 20px;
 }
 
 .attendance-actions .shell-button {
   width: 100%;
+}
+
+.will-you-attend-panel .shell-subtitle {
+  margin-top: 0;
+  margin-bottom: 20px;
+  max-width: 500px;
 }

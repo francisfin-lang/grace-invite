@@ -1,6 +1,6 @@
 import event from "../../data/event";
 import { Link, useLocation } from "react-router-dom";
-import { CrossEmblem, Divider, HeartMark, IconBadge, Icon, PanelCorners } from "../../components/Ornaments";
+import { CrossEmblem, Divider, IconBadge, Icon, PanelCorners } from "../../components/Ornaments";
 
 export default function Invitation() {
   const location = useLocation();
@@ -27,9 +27,9 @@ export default function Invitation() {
         
         <div className="invitation-parents">
           <p className="invitation-parents__intro">
-  <span>With Grateful Hearts</span>
-  <span>We</span>
-</p>
+            <span>WITH GRATEFUL HEARTS</span>
+            <span>WE</span>
+          </p>
 
           <p className="invitation-parents__names">
             <span>{event.parents.father}</span>
@@ -45,8 +45,6 @@ export default function Invitation() {
             {event.celebration.request}
           </p>
         </div>
-
-        <HeartMark className="invitation-heart" />
 
         <div className="invitation-details" aria-label="Event details">
           <article className="detail-card">
@@ -149,8 +147,7 @@ export default function Invitation() {
             RSVP Now
           </Link>
         </div>
-<Divider />
-        </section>
+      </section>
     </main>
   );
 }

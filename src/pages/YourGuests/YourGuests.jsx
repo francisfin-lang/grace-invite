@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import GuestCounterCard from "../../components/GuestCounterCard";
 import InvitationInfoCard from "../../components/InvitationInfoCard";
@@ -14,20 +14,11 @@ export default function YourGuests({
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    console.log("========== YOUR GUESTS ==========");
-    console.log("Invitation object:", invitation);
-    console.log("Invite ID:", invitation?.inviteId);
-    console.log("Invitee:", invitation?.inviteeName);
-    console.log("Guests Allowed:", invitation?.guestsAllowed);
-    console.log("Current URL:", window.location.href);
-    console.log("Search:", location.search);
-  }, [invitation, location]);
-
   const INVITED_GUESTS = Number(invitation?.guestsAllowed ?? 0);
 
   const [adults, setAdults] = useState(0);
   const [children, setChildren] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const guestsConfirmed = adults + children;
 
@@ -69,9 +60,11 @@ export default function YourGuests({
   );
 
   const handleConfirm = async () => {
-    if (!canConfirm) {
+    if (!canConfirm || isSubmitting) {
       return;
     }
+
+    setIsSubmitting(true);
 
     try {
       const rsvp = {
@@ -100,6 +93,8 @@ export default function YourGuests({
     } catch (error) {
       console.error("RSVP submission failed:", error);
       alert(error.message || "Unable to submit RSVP.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -188,9 +183,10 @@ export default function YourGuests({
           className="your-guests-page__confirm-button"
           type="button"
           onClick={handleConfirm}
-          disabled={!canConfirm}
+          disabled={!canConfirm || isSubmitting}
+          aria-busy={isSubmitting}
         >
-          Confirm RSVP
+          {isSubmitting ? "Submitting..." : "Confirm RSVP"}
         </button>
       </section>
     </main>
