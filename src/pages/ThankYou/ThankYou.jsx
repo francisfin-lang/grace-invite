@@ -87,8 +87,7 @@ export default function ThankYou({ invitation, invitationPath = "/" }) {
             <Divider />
 
             <section className="thank-you-page__gratitude">
-              <h3>WITH GRATITUDE</h3>
-
+              
               <p>
                 Your presence and blessings are the greatest gift to our child.
               </p>

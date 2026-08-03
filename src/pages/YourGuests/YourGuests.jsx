@@ -113,13 +113,6 @@ export default function YourGuests({
             Reception RSVP
           </p>
 
-          <h1
-            id="your-guests-title"
-            className="your-guests-page__title"
-          >
-            Your Guests
-          </h1>
-
           <div className="your-guests-page__message">
             <p>Thank you for accepting our invitation.</p>
 
