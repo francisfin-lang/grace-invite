@@ -12,7 +12,7 @@ const event = {
   },
 
   celebration: {
-    intro: "With Grateful Hearts",
+    intro: "With Grateful Hearts\nWe",
     request:
       "Request the pleasure of your company as we celebrate the Holy Baptism of our Beloved Son.",
   },

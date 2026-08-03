@@ -54,15 +54,7 @@ export default function ThankYou({ invitation, invitationPath = "/" }) {
           <div className="thank-you-page__message">
             {attending ? (
               <>
-                <p>
-                  We are delighted that you will be joining us for this special
-                  celebration.
-                </p>
-
-                <p>
-                  We look forward to celebrating this joyous occasion with you
-                  and your family.
-                </p>
+                
               </>
             ) : (
               <>
@@ -102,7 +94,7 @@ export default function ThankYou({ invitation, invitationPath = "/" }) {
               </p>
 
               <p>
-                Kindly, no boxed gifts.
+                Kindly Note: No boxed gifts.
               </p>
             </section>
 

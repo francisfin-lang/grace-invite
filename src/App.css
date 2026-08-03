@@ -403,3 +403,48 @@ a {
     width: 100%;
   }
 }
+
+.cover-title {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  margin:12px 0 46px;
+  color:var(--grace-gold-dark);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(30px,6vw,48px);
+  font-weight:400;
+  letter-spacing:.12em;
+  line-height:.95;
+  text-align:center;
+  text-transform:uppercase;
+}
+
+.cover-title span{
+  display:block;
+}
+
+.cover-title span:last-child{
+  margin-top:6px;
+}
+
+/* Invitation Intro */
+
+.invitation-parents__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  margin: 0 0 18px;
+
+  color: var(--grace-muted);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  line-height: 1.6;
+}
+
+.invitation-parents__intro span {
+  display: block;
+}

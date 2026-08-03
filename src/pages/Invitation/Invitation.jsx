@@ -27,8 +27,9 @@ export default function Invitation() {
         
         <div className="invitation-parents">
           <p className="invitation-parents__intro">
-            {event.celebration.intro}
-          </p>
+  <span>With Grateful Hearts</span>
+  <span>We</span>
+</p>
 
           <p className="invitation-parents__names">
             <span>{event.parents.father}</span>
@@ -148,15 +149,8 @@ export default function Invitation() {
             RSVP Now
           </Link>
         </div>
-
-        <Divider />
-
-        <p className="invitation-closing">
-          {event.closing}
-        </p>
-
-        <HeartMark className="invitation-heart invitation-heart--footer" />
-      </section>
+<Divider />
+        </section>
     </main>
   );
 }
