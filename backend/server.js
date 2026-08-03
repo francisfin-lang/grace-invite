@@ -9,10 +9,17 @@ app.use(cors());
 app.use(express.json());
 
 const PORT = process.env.PORT || 3001;
-const SPREADSHEET_ID = "10StpKpL63zZff29D30KeIW_S967zpm3VmM1xSZeB8xk";
+const SPREADSHEET_ID =
+  process.env.SPREADSHEET_ID ||
+  "10StpKpL63zZff29D30KeIW_S967zpm3VmM1xSZeB8xk";
 const SHEET_NAME = "Invitations";
-const CREDENTIALS_PATH = path.resolve(process.cwd(), "service-account.json");
 const SHEET_RANGE = `${SHEET_NAME}!A:J`;
+
+console.log(
+  process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+    ? "Running with Render credentials"
+    : "Running with local credentials"
+);
 
 let sheetsClient;
 let authClient;
@@ -80,15 +87,42 @@ async function getSheetsApi() {
     return sheetsClient;
   }
 
-  const credentials = JSON.parse(await readFile(CREDENTIALS_PATH, "utf8"));
+  let credentials;
+
+  if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
+    console.log("Using Google credentials from Render environment.");
+
+    credentials = JSON.parse(
+      process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+    );
+  } else {
+    console.log("Using local service-account.json");
+
+    const credentialsPath = path.resolve(
+      process.cwd(),
+      "service-account.json"
+    );
+
+    credentials = JSON.parse(
+      await readFile(credentialsPath, "utf8")
+    );
+  }
+
   authClient = new google.auth.JWT({
     email: credentials.client_email,
     key: credentials.private_key.replace(/\\n/g, "\n"),
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+    scopes: [
+      "https://www.googleapis.com/auth/spreadsheets",
+    ],
   });
 
   await authClient.authorize();
-  sheetsClient = google.sheets({ version: "v4", auth: authClient });
+
+  sheetsClient = google.sheets({
+    version: "v4",
+    auth: authClient,
+  });
+
   return sheetsClient;
 }
 
@@ -205,8 +239,8 @@ app.post("/api/rsvp", async (req, res) => {
     }
 
     const attending = Boolean(req.body?.attending ?? req.body?.confirmed ?? true);
-    const adults = parseNumber(req.body?.adults ?? 0);
-    const children = parseNumber(req.body?.children ?? req.body?.total ?? 0);
+    const adults = parseNumber(req.body?.adults);
+    const children = parseNumber(req.body?.children);
     const totalGuests = adults + children;
 
     if (totalGuests > invitation.guestsAllowed) {
