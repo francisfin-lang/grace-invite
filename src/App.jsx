@@ -39,6 +39,14 @@ function InvitationNotFoundState() {
 
 function AppRoutes() {
   const location = useLocation();
+  useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const redirect = params.get("redirect");
+
+  if (redirect) {
+    window.history.replaceState({}, "", redirect);
+  }
+}, []);
   const inviteId = getInviteIdFromUrl();
   const shouldLoadInvitation = !["/login", "/admin"].includes(location.pathname);
 
