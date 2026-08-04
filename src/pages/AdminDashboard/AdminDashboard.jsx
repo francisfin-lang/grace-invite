@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import "./AdminDashboard.css";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://graceinvite-github-io.onrender.com";
 
 function normalizeStatus(value) {
   const normalized = String(value || "").trim().toLowerCase();
@@ -134,7 +137,7 @@ export default function AdminDashboard() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3001/api/invitations");
+      const response = await fetch(`${API_BASE_URL}/api/invitations`);
 
       if (!response.ok) {
         throw new Error("Unable to load invitations");
@@ -282,7 +285,7 @@ export default function AdminDashboard() {
     const message = hasInviteSent ? buildReminderMessage(invitation) : buildInvitationMessage(invitation);
 
     try {
-      const response = await fetch(`http://localhost:3001${endpoint}`, {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -366,7 +369,7 @@ function openEditModal(invitation) {
     setEditError("");
 
     try {
-      const response = await fetch(`http://localhost:3001/api/invitation/${encodeURIComponent(editingInvitation.inviteId)}`, {
+      const response = await fetch(`${API_BASE_URL}/api/invitation/${encodeURIComponent(editingInvitation.inviteId)}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -383,7 +386,7 @@ function openEditModal(invitation) {
       }
 
       if (editForm.resetRsvp) {
-        const resetResponse = await fetch(`http://localhost:3001/api/invitation/${encodeURIComponent(editingInvitation.inviteId)}/reset-rsvp`, {
+        const resetResponse = await fetch(`${API_BASE_URL}/api/invitation/${encodeURIComponent(editingInvitation.inviteId)}/reset-rsvp`, {
           method: "POST",
         });
 
