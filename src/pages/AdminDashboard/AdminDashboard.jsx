@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
 import "./AdminDashboard.css";
 
 function normalizeStatus(value) {
@@ -47,6 +49,7 @@ function buildWhatsAppUrl(mobile, message) {
 const FILTERS = ["All", "Pending", "Accepted", "Declined", "Opened", "Not Opened"];
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
   const [invitations, setInvitations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -54,6 +57,45 @@ export default function AdminDashboard() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [copiedInviteId, setCopiedInviteId] = useState("");
   const [copiedMessageInviteId, setCopiedMessageInviteId] = useState("");
+  const [editingInvitation, setEditingInvitation] = useState(null);
+  const [editForm, setEditForm] = useState({
+    inviteeName: "",
+    mobile: "",
+    guestsAllowed: "",
+    resetRsvp: false,
+  });
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [editError, setEditError] = useState("");
+
+  function handleLogout() {
+    sessionStorage.removeItem("grace-admin-auth");
+    navigate("/login", { replace: true });
+  }
+
+  function exportToExcel() {
+    const workbook = XLSX.utils.book_new();
+    const rows = invitations.map((invitation) => ({
+      "Invite ID": invitation.inviteId || "",
+      Invitee: invitation.inviteeName || "",
+      Mobile: invitation.mobile || "",
+      "Guests Allowed": invitation.guestsAllowed ?? 0,
+      Status: invitation.status || "Pending",
+      Adults: invitation.adults ?? 0,
+      Children: invitation.children ?? 0,
+      "Invitation Opened": invitation.invitationOpened ? formatDate(invitation.invitationOpened) : "",
+      "RSVP Time": invitation.rsvpTimestamp ? formatDate(invitation.rsvpTimestamp) : "",
+      "Invite Sent": Boolean(invitation.inviteSent) ? "Yes" : "No",
+      "Reminder Sent": Boolean(invitation.reminderSent) ? "Yes" : "No",
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Invitations");
+
+    const today = new Date();
+    const fileName = `GraceInviteGuests_${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, "0")}${String(today.getDate()).padStart(2, "0")}.xlsx`;
+
+    XLSX.writeFile(workbook, fileName);
+  }
 
   async function loadInvitations() {
     setLoading(true);
@@ -235,6 +277,96 @@ export default function AdminDashboard() {
     }
   }
 
+  function openEditModal(invitation) {
+    setEditingInvitation(invitation);
+    setEditForm({
+      inviteeName: invitation?.inviteeName || "",
+      mobile: invitation?.mobile || "",
+      guestsAllowed: invitation?.guestsAllowed ?? "",
+      resetRsvp: false,
+    });
+    setEditError("");
+  }
+
+  function closeEditModal() {
+    setEditingInvitation(null);
+    setEditError("");
+  }
+
+  function handleEditFieldChange(event) {
+    const { name, value, type, checked } = event.target;
+
+    setEditForm((current) => ({
+      ...current,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  }
+
+  async function handleSaveEdit(event) {
+    event.preventDefault();
+
+    if (!editingInvitation) {
+      return;
+    }
+
+    const inviteeName = editForm.inviteeName.trim();
+    const mobile = editForm.mobile.trim();
+    const guestsAllowed = Number(editForm.guestsAllowed);
+
+    if (!inviteeName) {
+      setEditError("Name is required.");
+      return;
+    }
+
+    if (!mobile) {
+      setEditError("Mobile number is required.");
+      return;
+    }
+
+    if (!Number.isFinite(guestsAllowed) || guestsAllowed < 0) {
+      setEditError("Guests Allowed must be 0 or greater.");
+      return;
+    }
+
+    setSavingEdit(true);
+    setEditError("");
+
+    try {
+      const response = await fetch(`http://localhost:3001/api/invitation/${encodeURIComponent(editingInvitation.inviteId)}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          inviteeName,
+          mobile,
+          guestsAllowed,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to save invitation details");
+      }
+
+      if (editForm.resetRsvp) {
+        const resetResponse = await fetch(`http://localhost:3001/api/invitation/${encodeURIComponent(editingInvitation.inviteId)}/reset-rsvp`, {
+          method: "POST",
+        });
+
+        if (!resetResponse.ok) {
+          throw new Error("Unable to reset RSVP");
+        }
+      }
+
+      await loadInvitations();
+      closeEditModal();
+    } catch (error) {
+      setEditError(error.message || "Unable to save invitation details");
+    } finally {
+      setSavingEdit(false);
+    }
+  }
+
   return (
     <main className="admin-dashboard-page">
       <section className="admin-dashboard-shell">
@@ -246,7 +378,23 @@ export default function AdminDashboard() {
               Monitor invitations, RSVP activity, and guest confirmations in one place.
             </p>
           </div>
-          <div className="admin-dashboard-pill">Live invitation data</div>
+          <div className="admin-dashboard-header-actions">
+            <button
+              type="button"
+              className="admin-dashboard-logout"
+              onClick={exportToExcel}
+              style={{
+                background: "linear-gradient(135deg, #f7de8a, #d8a12c)",
+                color: "#412d0e",
+              }}
+            >
+              📥 Export to Excel
+            </button>
+            <div className="admin-dashboard-pill">Live invitation data</div>
+            <button type="button" className="admin-dashboard-logout" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
         </header>
 
         <section className="admin-dashboard-stats" aria-label="Invitation statistics">
@@ -387,6 +535,13 @@ export default function AdminDashboard() {
                             >
                               {copiedMessageInviteId === invitation.inviteId ? "✓ Message Copied" : "📝 Copy Message"}
                             </button>
+                            <button
+                              type="button"
+                              className="table-action-button"
+                              onClick={() => openEditModal(invitation)}
+                            >
+                              ✏️ Edit
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -398,6 +553,76 @@ export default function AdminDashboard() {
           )}
         </section>
       </section>
+
+      {editingInvitation ? (
+        <div className="admin-dashboard-modal-backdrop" role="dialog" aria-modal="true">
+          <div className="admin-dashboard-modal">
+            <div className="admin-dashboard-modal__header">
+              <div>
+                <p className="admin-dashboard-eyebrow">Guest Management</p>
+                <h2 className="admin-dashboard-modal__title">Edit Invitation</h2>
+              </div>
+              <button type="button" className="admin-dashboard-modal__close" onClick={closeEditModal}>
+                ×
+              </button>
+            </div>
+
+            <form className="admin-dashboard-modal__form" onSubmit={handleSaveEdit}>
+              <label className="admin-dashboard-field">
+                <span>Invitee Name</span>
+                <input
+                  name="inviteeName"
+                  value={editForm.inviteeName}
+                  onChange={handleEditFieldChange}
+                  placeholder="Enter invitee name"
+                />
+              </label>
+
+              <label className="admin-dashboard-field">
+                <span>Mobile Number</span>
+                <input
+                  name="mobile"
+                  value={editForm.mobile}
+                  onChange={handleEditFieldChange}
+                  placeholder="Enter mobile number"
+                />
+              </label>
+
+              <label className="admin-dashboard-field">
+                <span>Guests Allowed</span>
+                <input
+                  name="guestsAllowed"
+                  type="number"
+                  min="0"
+                  value={editForm.guestsAllowed}
+                  onChange={handleEditFieldChange}
+                />
+              </label>
+
+              <label className="admin-dashboard-checkbox">
+                <input
+                  name="resetRsvp"
+                  type="checkbox"
+                  checked={editForm.resetRsvp}
+                  onChange={handleEditFieldChange}
+                />
+                <span>Reset RSVP</span>
+              </label>
+
+              {editError ? <p className="admin-dashboard-modal__error">{editError}</p> : null}
+
+              <div className="admin-dashboard-modal__actions">
+                <button type="button" className="admin-dashboard-modal__button admin-dashboard-modal__button--secondary" onClick={closeEditModal}>
+                  Cancel
+                </button>
+                <button type="submit" className="admin-dashboard-modal__button" disabled={savingEdit}>
+                  {savingEdit ? "Saving..." : "Save"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }

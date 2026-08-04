@@ -13,6 +13,7 @@ import WillYouAttend from "./pages/WillYouAttend";
 import YourGuests from "./pages/YourGuests";
 import ThankYou from "./pages/ThankYou";
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
+import AdminLogin from "./pages/AdminLogin/AdminLogin";
 
 import "./App.css";
 
@@ -119,8 +120,19 @@ function App() {
         />
 
         <Route
+          path="/login"
+          element={<AdminLogin />}
+        />
+
+        <Route
           path="/admin"
-          element={<AdminDashboard />}
+          element={
+            sessionStorage.getItem("grace-admin-auth") === "true" ? (
+              <AdminDashboard />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
         />
 
         <Route

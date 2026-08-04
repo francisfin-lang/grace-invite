@@ -333,6 +333,79 @@ app.post("/api/invitation/reminder", async (req, res) => {
   }
 });
 
+app.put("/api/invitation/:inviteId", async (req, res) => {
+  try {
+    const inviteId = String(req.params.inviteId || "").trim();
+    if (!inviteId) {
+      return res.status(400).json({ error: "inviteId is required" });
+    }
+
+    const rowData = await getInvitationRow(inviteId);
+    if (!rowData) {
+      return res.status(404).json({ error: "Invitation not found" });
+    }
+
+    const { rowIndex } = rowData;
+    const inviteeName = String(req.body?.inviteeName || "").trim();
+    const mobile = String(req.body?.mobile || "").trim();
+    const guestsAllowed = parseNumber(req.body?.guestsAllowed);
+
+    if (!inviteeName) {
+      return res.status(400).json({ error: "inviteeName is required" });
+    }
+
+    if (!mobile) {
+      return res.status(400).json({ error: "mobile is required" });
+    }
+
+    await updateSheetCells(rowIndex, [
+      { columnLetter: "B", value: inviteeName },
+      { columnLetter: "C", value: mobile },
+      { columnLetter: "D", value: guestsAllowed },
+    ]);
+
+    return res.json({
+      success: true,
+      inviteId,
+      inviteeName,
+      mobile,
+      guestsAllowed,
+    });
+  } catch (error) {
+    console.error("Failed to update invitation", error);
+    return res.status(500).json({ error: "Unable to update invitation" });
+  }
+});
+
+app.post("/api/invitation/:inviteId/reset-rsvp", async (req, res) => {
+  try {
+    const inviteId = String(req.params.inviteId || "").trim();
+    if (!inviteId) {
+      return res.status(400).json({ error: "inviteId is required" });
+    }
+
+    const rowData = await getInvitationRow(inviteId);
+    if (!rowData) {
+      return res.status(404).json({ error: "Invitation not found" });
+    }
+
+    const { rowIndex } = rowData;
+
+    await updateSheetCells(rowIndex, [
+      { columnLetter: "E", value: "" },
+      { columnLetter: "F", value: 0 },
+      { columnLetter: "G", value: 0 },
+      { columnLetter: "H", value: "Pending" },
+      { columnLetter: "J", value: "" },
+    ]);
+
+    return res.json({ success: true, inviteId });
+  } catch (error) {
+    console.error("Failed to reset RSVP", error);
+    return res.status(500).json({ error: "Unable to reset RSVP" });
+  }
+});
+
 app.get("/api/invitations", async (req, res) => {
 
   console.log("Invitations endpoint called");
