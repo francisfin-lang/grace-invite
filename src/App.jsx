@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import {
   loadInvitation,
@@ -17,14 +17,43 @@ import AdminLogin from "./pages/AdminLogin/AdminLogin";
 
 import "./App.css";
 
-function App() {
+function LoadingState() {
+  return (
+    <main className="shell-page">
+      <section className="shell-panel">
+        <p>Loading invitation...</p>
+      </section>
+    </main>
+  );
+}
+
+function InvitationNotFoundState() {
+  return (
+    <main className="shell-page">
+      <section className="shell-panel">
+        <p>Invitation not found.</p>
+      </section>
+    </main>
+  );
+}
+
+function AppRoutes() {
+  const location = useLocation();
   const inviteId = getInviteIdFromUrl();
+  const shouldLoadInvitation = !["/login", "/admin"].includes(location.pathname);
+
   console.log("Invite ID =", inviteId);
 
   const [invitation, setInvitation] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(shouldLoadInvitation);
 
   useEffect(() => {
+    if (!shouldLoadInvitation) {
+      setLoading(false);
+      setInvitation(null);
+      return;
+    }
+
     let cancelled = false;
 
     async function initialise() {
@@ -34,9 +63,7 @@ function App() {
         const loadedInvitation = await loadInvitation(inviteId);
 
         if (!cancelled) {
-          setInvitation(
-            loadedInvitation ?? getDefaultInvitation(inviteId)
-          );
+          setInvitation(loadedInvitation ?? getDefaultInvitation(inviteId));
         }
       } catch (error) {
         console.error("Failed to load invitation:", error);
@@ -56,91 +83,110 @@ function App() {
     return () => {
       cancelled = true;
     };
-  }, [inviteId]);
-
-  if (loading) {
-    return (
-      <main className="shell-page">
-        <section className="shell-panel">
-          <p>Loading invitation...</p>
-        </section>
-      </main>
-    );
-  }
-
-  if (!invitation) {
-    return (
-      <main className="shell-page">
-        <section className="shell-panel">
-          <p>Invitation not found.</p>
-        </section>
-      </main>
-    );
-  }
+  }, [inviteId, shouldLoadInvitation]);
 
   return (
+    <Routes>
+      <Route path="/login" element={<AdminLogin />} />
+
+      <Route
+        path="/admin"
+        element={
+          sessionStorage.getItem("grace-admin-auth") === "true" ? (
+            <AdminDashboard />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+
+      <Route
+        path="/"
+        element={
+          loading ? (
+            <LoadingState />
+          ) : invitation ? (
+            <Invitation invitation={invitation} />
+          ) : (
+            <InvitationNotFoundState />
+          )
+        }
+      />
+
+      <Route
+        path="/cover"
+        element={
+          loading ? (
+            <LoadingState />
+          ) : invitation ? (
+            <Cover invitation={invitation} />
+          ) : (
+            <InvitationNotFoundState />
+          )
+        }
+      />
+
+      <Route
+        path="/invitation"
+        element={
+          loading ? (
+            <LoadingState />
+          ) : invitation ? (
+            <Invitation invitation={invitation} />
+          ) : (
+            <InvitationNotFoundState />
+          )
+        }
+      />
+
+      <Route
+        path="/will-you-attend"
+        element={
+          loading ? (
+            <LoadingState />
+          ) : invitation ? (
+            <WillYouAttend invitation={invitation} />
+          ) : (
+            <InvitationNotFoundState />
+          )
+        }
+      />
+
+      <Route
+        path="/guests"
+        element={
+          loading ? (
+            <LoadingState />
+          ) : invitation ? (
+            <YourGuests invitation={invitation} />
+          ) : (
+            <InvitationNotFoundState />
+          )
+        }
+      />
+
+      <Route
+        path="/thank-you"
+        element={
+          loading ? (
+            <LoadingState />
+          ) : invitation ? (
+            <ThankYou invitation={invitation} invitationPath="/invitation" />
+          ) : (
+            <InvitationNotFoundState />
+          )
+        }
+      />
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+}
+
+function App() {
+  return (
     <BrowserRouter>
-      <Routes>
-
-        {/* New Home Page */}
-        <Route
-          path="/"
-          element={<Invitation invitation={invitation} />}
-        />
-
-        {/* Keep Cover Page for future use */}
-        <Route
-          path="/cover"
-          element={<Cover invitation={invitation} />}
-        />
-
-        <Route
-          path="/invitation"
-          element={<Invitation invitation={invitation} />}
-        />
-
-        <Route
-          path="/will-you-attend"
-          element={<WillYouAttend invitation={invitation} />}
-        />
-
-        <Route
-          path="/guests"
-          element={<YourGuests invitation={invitation} />}
-        />
-
-        <Route
-          path="/thank-you"
-          element={
-            <ThankYou
-              invitation={invitation}
-              invitationPath="/invitation"
-            />
-          }
-        />
-
-        <Route
-          path="/login"
-          element={<AdminLogin />}
-        />
-
-        <Route
-          path="/admin"
-          element={
-            sessionStorage.getItem("grace-admin-auth") === "true" ? (
-              <AdminDashboard />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-
-        <Route
-          path="*"
-          element={<Navigate to="/" replace />}
-        />
-
-      </Routes>
+      <AppRoutes />
     </BrowserRouter>
   );
 }
