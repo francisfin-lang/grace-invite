@@ -441,3 +441,9 @@
     min-width: 760px;
   }
 }
+
+.guest-count{
+ text-align:center;
+ font-weight:700;
+ font-size:1.05rem;
+}

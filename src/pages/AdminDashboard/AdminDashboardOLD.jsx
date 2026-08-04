@@ -32,46 +32,14 @@ function buildInvitationMessage(invitation) {
   const inviteeName = invitation?.inviteeName || "Guest";
   const inviteId = invitation?.inviteId || "";
 
-  return `Dear ${inviteeName},
-
-With love and joy, we invite you to celebrate the Holy Baptism of our son.
-
-Your presence would mean so much to us. Please treat this as your personal invitation.
-
-Please view your personal invitation here:
-
-${buildInvitationUrl(inviteId)}
-
-Kindly RSVP by Saturday, 8th August.
-
-We look forward to celebrating this special day with you!
-
-God bless,
-
-Bernraf Dias & Charlotte Fernandes`;
+  return `Dear ${inviteeName},\n\nWith grateful hearts we invite you and your family to the Holy Baptism of our beloved son.\n\nPlease view your invitation here:\n${buildInvitationUrl(inviteId)}\n\nWe look forward to celebrating with you.`;
 }
 
 function buildReminderMessage(invitation) {
   const inviteeName = invitation?.inviteeName || "Guest";
   const inviteId = invitation?.inviteId || "";
 
-  return `Dear ${inviteeName},
-
-This is a gentle reminder regarding the Holy Baptism of our son.
-
-We hope you've had a chance to view your invitation.
-
-Please view your personal invitation here:
-
-${buildInvitationUrl(inviteId)}
-
-Kindly RSVP by Saturday, 8th August if you haven't already.
-
-We look forward to celebrating this special day with you!
-
-God bless,
-
-Bernraf Dias & Charlotte Fernandes`;
+  return `Dear ${inviteeName},\n\nThis is a gentle reminder of our invitation to the Holy Baptism of our beloved son.\n\nPlease view your invitation here:\n${buildInvitationUrl(inviteId)}\n\nWe would be delighted to celebrate with you.`;
 }
 
 function buildWhatsAppUrl(mobile, message) {
@@ -272,12 +240,18 @@ export default function AdminDashboard() {
   async function handlePrimaryAction(invitation) {
     const status = normalizeStatus(invitation.status);
 
-    if (status === "accepted" || status === "declined") {
+    if (status === "accepted") {
+      window.open(buildInvitationUrl(invitation.inviteId), "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    if (status === "declined") {
       window.open(buildInvitationUrl(invitation.inviteId), "_blank", "noopener,noreferrer");
       return;
     }
 
     const hasInviteSent = Boolean(invitation.inviteSent);
+    const hasReminderSent = Boolean(invitation.reminderSent);
     const endpoint = hasInviteSent ? "/api/invitation/reminder" : "/api/invitation/send";
     const message = hasInviteSent ? buildReminderMessage(invitation) : buildInvitationMessage(invitation);
 
@@ -286,32 +260,24 @@ export default function AdminDashboard() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
         },
-        body: JSON.stringify({ inviteId: String(invitation.inviteId).trim() }),
+        body: JSON.stringify({
+          inviteId: invitation.inviteId,
+        }),
       });
 
-      const responseText = await response.text();
-      console.log(response.status, responseText);
-
       if (!response.ok) {
-        throw new Error(responseText || "Unable to process invitation action");
+        throw new Error("Unable to process invitation action");
       }
 
       await loadInvitations();
-
-      window.open(
-        buildWhatsAppUrl(String(invitation.mobile || "").trim(), message),
-        "_blank",
-        "noopener,noreferrer"
-      );
+      window.open(buildWhatsAppUrl(String(invitation.mobile || "").trim(), message), "_blank", "noopener,noreferrer");
     } catch (error) {
-      console.error(error);
-      alert(error.message || "Unable to process invitation action");
+      window.alert(error.message || "Unable to complete invitation action");
     }
   }
 
-function openEditModal(invitation) {
+  function openEditModal(invitation) {
     setEditingInvitation(invitation);
     setEditForm({
       inviteeName: invitation?.inviteeName || "",

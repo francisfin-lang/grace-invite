@@ -6,7 +6,7 @@ import path from "node:path";
 
 const app = express();
 console.log("****************************************");
-console.log("Grace Invite Backend Version 2");
+console.log("Grace Invite Backend v1.0.0");
 console.log("****************************************");
 app.use(cors());
 app.use(express.json());
@@ -218,6 +218,16 @@ app.get("/api/health", (req, res) => {
   res.json({ ok: true, service: "Grace Invite API" });
 });
 
+app.post("/api/test", (req, res) => {
+  console.log("TEST ROUTE HIT");
+  console.log(req.body);
+
+  res.json({
+    success: true,
+    body: req.body,
+  });
+});
+
 app.get("/api/invitation/:inviteId", async (req, res) => {
   try {
     const rowData = await getInvitationRow(req.params.inviteId);
@@ -296,21 +306,42 @@ app.post("/api/rsvp", async (req, res) => {
 });
 
 app.post("/api/invitation/send", async (req, res) => {
+  console.log("====================================");
+  console.log("SEND ROUTE HIT");
+  console.log("Request Body:", req.body);
+  console.log("====================================");
+
   try {
     const inviteId = String(req.body?.inviteId || "").trim();
+
     if (!inviteId) {
-      return res.status(400).json({ error: "inviteId is required" });
+      return res.status(400).json({
+        error: "inviteId is required",
+      });
     }
 
-    const result = await updateInvitationTimestamp(inviteId, "K", "inviteSent");
+    const result = await updateInvitationTimestamp(
+      inviteId,
+      "K",
+      "inviteSent"
+    );
+
     if (!result) {
-      return res.status(404).json({ error: "Invitation not found" });
+      return res.status(404).json({
+        error: "Invitation not found",
+      });
     }
+
+    console.log("Invite marked as sent");
 
     return res.json(result);
   } catch (error) {
-    console.error("Failed to mark invitation as sent", error);
-    return res.status(500).json({ error: "Unable to mark invitation as sent" });
+    console.error("SEND ROUTE ERROR");
+    console.error(error);
+
+    return res.status(500).json({
+      error: "Unable to mark invitation as sent",
+    });
   }
 });
 
@@ -407,8 +438,7 @@ app.post("/api/invitation/:inviteId/reset-rsvp", async (req, res) => {
 });
 
 app.get("/api/invitations", async (req, res) => {
-
-  console.log("Invitations endpoint called");
+
   try {
     const sheets = await getSheetsApi();
 
