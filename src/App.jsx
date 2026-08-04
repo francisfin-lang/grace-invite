@@ -12,12 +12,14 @@ import Invitation from "./pages/Invitation";
 import WillYouAttend from "./pages/WillYouAttend";
 import YourGuests from "./pages/YourGuests";
 import ThankYou from "./pages/ThankYou";
+import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
 
 import "./App.css";
 
 function App() {
   const inviteId = getInviteIdFromUrl();
   console.log("Invite ID =", inviteId);
+
   const [invitation, setInvitation] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -78,8 +80,16 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        {/* New Home Page */}
         <Route
           path="/"
+          element={<Invitation invitation={invitation} />}
+        />
+
+        {/* Keep Cover Page for future use */}
+        <Route
+          path="/cover"
           element={<Cover invitation={invitation} />}
         />
 
@@ -109,9 +119,15 @@ function App() {
         />
 
         <Route
+          path="/admin"
+          element={<AdminDashboard />}
+        />
+
+        <Route
           path="*"
           element={<Navigate to="/" replace />}
         />
+
       </Routes>
     </BrowserRouter>
   );

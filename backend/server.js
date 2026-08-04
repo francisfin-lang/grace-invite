@@ -5,6 +5,9 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 const app = express();
+console.log("****************************************");
+console.log("Grace Invite Backend Version 2");
+console.log("****************************************");
 app.use(cors());
 app.use(express.json());
 
@@ -13,7 +16,7 @@ const SPREADSHEET_ID =
   process.env.SPREADSHEET_ID ||
   "10StpKpL63zZff29D30KeIW_S967zpm3VmM1xSZeB8xk";
 const SHEET_NAME = "Invitations";
-const SHEET_RANGE = `${SHEET_NAME}!A:J`;
+const SHEET_RANGE = `${SHEET_NAME}!A:L`;
 
 console.log(
   process.env.GOOGLE_SERVICE_ACCOUNT_JSON
@@ -67,6 +70,8 @@ function mapRowToInvitation(row) {
     status: parseStatus(row[7]),
     invitationOpened: row[8] || "",
     rsvpTimestamp: row[9] || "",
+    inviteSent: row[10] || "",
+    reminderSent: row[11] || "",
   };
 }
 
@@ -177,6 +182,21 @@ async function updateSheetCells(rowIndex, updates) {
   });
 }
 
+async function updateInvitationTimestamp(inviteId, columnLetter, responseField) {
+  const rowData = await getInvitationRow(inviteId);
+  if (!rowData) {
+    return null;
+  }
+
+  const timestamp = new Date().toISOString();
+  await updateSheetCell(rowData.rowIndex, columnLetter, timestamp);
+
+  return {
+    success: true,
+    [responseField]: timestamp,
+  };
+}
+
 function hasExistingRsvp(invitation) {
   const status = String(invitation.status || "").trim().toLowerCase();
   const confirmedValue = String(invitation.confirmed || "").trim().toLowerCase();
@@ -272,6 +292,74 @@ app.post("/api/rsvp", async (req, res) => {
   } catch (error) {
     console.error("Failed to submit RSVP", error);
     return res.status(500).json({ error: "Unable to submit RSVP" });
+  }
+});
+
+app.post("/api/invitation/send", async (req, res) => {
+  try {
+    const inviteId = String(req.body?.inviteId || "").trim();
+    if (!inviteId) {
+      return res.status(400).json({ error: "inviteId is required" });
+    }
+
+    const result = await updateInvitationTimestamp(inviteId, "K", "inviteSent");
+    if (!result) {
+      return res.status(404).json({ error: "Invitation not found" });
+    }
+
+    return res.json(result);
+  } catch (error) {
+    console.error("Failed to mark invitation as sent", error);
+    return res.status(500).json({ error: "Unable to mark invitation as sent" });
+  }
+});
+
+app.post("/api/invitation/reminder", async (req, res) => {
+  try {
+    const inviteId = String(req.body?.inviteId || "").trim();
+    if (!inviteId) {
+      return res.status(400).json({ error: "inviteId is required" });
+    }
+
+    const result = await updateInvitationTimestamp(inviteId, "L", "reminderSent");
+    if (!result) {
+      return res.status(404).json({ error: "Invitation not found" });
+    }
+
+    return res.json(result);
+  } catch (error) {
+    console.error("Failed to mark reminder as sent", error);
+    return res.status(500).json({ error: "Unable to mark reminder as sent" });
+  }
+});
+
+app.get("/api/invitations", async (req, res) => {
+
+  console.log("Invitations endpoint called");
+  try {
+    const sheets = await getSheetsApi();
+
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: SHEET_RANGE,
+    });
+
+    const rows = response.data.values || [];
+
+    const invitations = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      if (!rows[i] || rows[i].length === 0) continue;
+
+      invitations.push(mapRowToInvitation(rows[i]));
+    }
+
+    res.json(invitations);
+  } catch (error) {
+    console.error("Failed to load invitations", error);
+    res.status(500).json({
+      error: "Unable to load invitations",
+    });
   }
 });
 

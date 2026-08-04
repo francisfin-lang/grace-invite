@@ -465,3 +465,29 @@ a {
 .invitation-parents__intro span {
   display: block;
 }
+
+/* ==========================================
+   Unable to Attend Link
+========================================== */
+
+.invitation-unable-link {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-top: 14px;
+
+  color: #8d6e2f;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  text-decoration: underline;
+
+  transition: all 0.25s ease;
+}
+
+.invitation-unable-link:hover {
+  opacity: 0.75;
+}
